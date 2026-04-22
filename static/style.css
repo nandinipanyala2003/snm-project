@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    font-family: Arial;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 350px;
+}
+
+.card h1 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 20px;
+    color: gray;
+}
+
+.buttons a {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    border-radius: 8px;
+}
+
+.buttons a:first-child {
+    background: #3498db;
+}
+
+.buttons a:last-child {
+    background: #2ecc71;
+}

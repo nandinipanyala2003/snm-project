@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Note</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            padding: 25px 30px;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        /* Flash messages */
+        .flash {
+            text-align: center;
+            padding: 12px 18px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .note-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .note-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .note-content {
+            font-size: 1.1em;
+            color: #444;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+        }
+        
+        .note-meta {
+            color: #666;
+            font-size: 0.95em;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+            font-weight: 500;
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .action-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .update-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .update-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .no-note {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            padding: 60px 20px;
+        }
+        
+        .no-note a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 0;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                margin: 8px 0;
+                width: 100%;
+            }
+            
+            .note-title {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>View Note</h1>
+        </div>
+        
+        <div class="content">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="flash {{ 'success' if 'success' in message.lower() else 'error' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if notesdata %}
+                <div class="note-container">
+                    <div class="note-title">{{ notesdata[1] }}</div>
+                    <div class="note-content">{{ notesdata[2] }}</div>
+                    <div class="note-meta">
+                        <strong>ID:</strong> {{ notesdata[0] }} | 
+                        <strong>Created:</strong> {{ notesdata[4] if notesdata[4] else 'N/A' }}
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="{{ url_for('updatenotes', nid=notesdata[0]) }}" class="action-btn update-btn">Update</a>
+                    <a href="{{ url_for('deletenotes', nid=notesdata[0]) }}" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this note?')">Delete</a>
+                </div>
+            {% else %}
+                <div class="no-note">
+                    Note not found. <a href="{{ url_for('viewallnotes') }}">View all notes</a>
+                </div>
+            {% endif %}
+
+            <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e1e5e9;">
+                <a href="{{ url_for('viewallnotes') }}" class="action-btn back-btn">Back to Notes</a>
+                <a href="{{ url_for('dashboard') }}" class="action-btn back-btn">Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

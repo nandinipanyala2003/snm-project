@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Notes Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        /* Page Background - Same as welcome page */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        /* Card - Matching welcome page */
+        .card {
+            width: 400px;
+            height: auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Heading */
+        h3 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        /* Form spacing */
+        .mb-3 {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* Labels */
+        label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Inputs */
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* Register Button - Matching success button */
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: #2ecc71;
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Footer text */
+        p {
+            color: #666;
+            margin-top: 25px;
+            font-size: 15px;
+        }
+
+        /* Links */
+        a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+
+        /* Flash messages */
+        .flash {
+            text-align: center;
+            color: #721c24;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h3>Create Account</h3>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="mb-3">
+                <label>Name</label>
+                <input type="text" name="uname" placeholder="Enter name" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input type="email" name="uemail" placeholder="Enter email" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter password" required minlength="6">
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="{{ url_for('login') }}">Login</a>
+        </p>
+    </div>
+</body>
+</html>

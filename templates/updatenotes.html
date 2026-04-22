@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        /* Flash messages */
+        .flash {
+            text-align: center;
+            padding: 12px 18px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .flash.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            resize: vertical;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        textarea {
+            min-height: 160px;
+            line-height: 1.6;
+        }
+        
+        .update-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .back-btn {
+            flex: 1;
+            padding: 15px 25px;
+            background: #95a5a6;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        .excel-btn {
+            flex: 1;
+            padding: 15px 25px;
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .excel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px 0;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Update Note</h1>
+        </div>
+        
+        <div class="content">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="flash {{ 'success' if 'success' in message.lower() else 'error' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="subtitle">Edit your note details below</div>
+            
+            <!-- Update Form -->
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="title">Note Title</label>
+                    <input type="text" id="title" name="title" value="{{ notesdata[1] if notesdata else '' }}" placeholder="Enter note title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Note Content</label>
+                    <textarea id="content" name="content" placeholder="Write your updated note content here..." required>{{ notesdata[2] if notesdata else '' }}</textarea>
+                </div>
+                
+                <button type="submit" class="update-btn">Update Note</button>
+            </form>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('getexceldata') }}" class="excel-btn">Download All Notes</a>
+                <a href="{{ url_for('viewallnotes') }}" class="back-btn">Back to Notes</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

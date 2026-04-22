@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+
+        /* Flash message */
+        .flash {
+            text-align: center;
+            color: #155724;
+            padding: 12px 20px;
+            font-weight: 500;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            margin: 15px 20px;
+            border-radius: 8px;
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Menu container */
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Buttons */
+        nav button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Dropdown */
+        .dropdown-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            min-width: 160px;
+            z-index: 1000;
+            display: none;
+            border: 1px solid #e1e5e9;
+        }
+
+        .menu-container:hover .dropdown-box {
+            display: block;
+        }
+
+        nav a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Right section */
+        .right-section {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-email {
+            font-weight: 600;
+            color: #333;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* Search */
+        .search-box {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #e1e5e9;
+            width: 220px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 60px 30px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .welcome {
+            font-size: 3em;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 50px;
+            font-weight: 300;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .right-section {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .welcome {
+                font-size: 2.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <nav>
+        <div class="menu-container">
+            <button>Notes</button>
+            <div class="dropdown-box">
+                <a href="{{ url_for('addnotes') }}">Add Notes</a>
+                <a href="{{ url_for('viewallnotes') }}">View All Notes</a>
+                <a href="{{ url_for('getexceldata') }}">Get Excel</a>
+            </div>
+        </div>
+
+        <div class="menu-container">
+            <button>Files</button>
+            <div class="dropdown-box">
+                <a href="{{ url_for('uploadfile') }}">Upload Files</a>
+                <a href="{{ url_for('viewallfiles') }}">View All Files</a>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <span class="user-email">{{ session.get('user', 'User') }}</span>
+
+            <form method="POST" action="{{ url_for('search') }}">
+                <input type="text" name="search_value" class="search-box" placeholder="Search notes...">
+            </form>
+
+            <a href="{{ url_for('logout') }}">
+                <button class="logout-btn">Logout</button>
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="welcome">Welcome to Dashboard!</h1>
+        <p class="subtitle">Manage your notes and files here</p>
+    </div>
+</body>
+</html>
